@@ -2,7 +2,6 @@ using AuthenticationAspNetIdentity;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -24,18 +23,18 @@ var connectionString = configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
-    // Configuraciones de seguridad de contraseñas
+    // Config password security
     options.Password.RequireDigit = true;
     options.Password.RequireLowercase = true;
     options.Password.RequireUppercase = true;
     options.Password.RequiredLength = 8;
     options.Password.RequiredUniqueChars = 6;
 
-    // Configuración de bloqueo de cuenta
+    // Config account lockout
     options.Lockout.MaxFailedAccessAttempts = 5;
     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
 
-    // Configuración de opciones de usuario
+    // Config user options
     options.User.RequireUniqueEmail = true;
 })
     .AddEntityFrameworkStores<ApplicationDbContext>()
