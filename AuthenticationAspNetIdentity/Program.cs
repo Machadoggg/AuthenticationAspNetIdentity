@@ -10,8 +10,17 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-        options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+//builder.Services.AddDbContext<ApplicationDbContext>(options =>
+//        options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+var configuration = new ConfigurationBuilder()
+           .SetBasePath(System.IO.Directory.GetCurrentDirectory())
+           .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+           .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", optional: true)
+           .AddEnvironmentVariables()
+           .Build();
+
+var connectionString = configuration.GetConnectionString("DefaultConnection");
+
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
