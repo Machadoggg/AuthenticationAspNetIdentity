@@ -43,5 +43,26 @@ namespace AuthenticationAspNetIdentity.Controllers
             return Ok(new { message = "Logout successful" });
         }
 
+
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] ApplicationUser model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = new ApplicationUser { UserName = model.FullName, Password = model.Password };
+                var result = await _userManager.CreateAsync(user, model.Password);
+                if (result.Succeeded)
+                {
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    return Ok(new { message = "Registration successful" });
+                }
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+            }
+            return BadRequest(ModelState);
+        }
+
     }
 }
