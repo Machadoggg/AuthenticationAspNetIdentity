@@ -35,5 +35,13 @@ namespace AuthenticationAspNetIdentity.Controllers
             }
             return BadRequest(ModelState);
         }
+
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return Ok(new { message = "Logout successful" });
+        }
+
     }
 }
